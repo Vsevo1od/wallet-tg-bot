@@ -1,6 +1,5 @@
 // Based on https://github.com/telegraf/telegraf/blob/v4/docs/examples/express-webhook-bot.ts
 
-// @ts-expect-error
 import express, { Request, Response } from 'express'
 import { Telegraf } from 'telegraf'
 
