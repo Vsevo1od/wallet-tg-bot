@@ -24,7 +24,7 @@ const newMenu = new Menu("new-menu")
 bot.use(newMenu);
 
 bot.command("start", (ctx) => {
-    return ctx.reply("Welcome! Up and running.", {reply_markup: newMenu});
+    return ctx.reply("Добро пожаловать! Импортируйте или создайте кошелёк", {reply_markup: newMenu});
 });
 bot.start();
 bot.api.setMyCommands([
