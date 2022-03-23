@@ -13,20 +13,32 @@ if (BOT_TOKEN === undefined) {
 }
 
 const bot = new Bot(BOT_TOKEN);
-const menu = new Menu("full-menu")
-    .text("Создание кошелька", (ctx: Context) => ctx.reply("Создание кошелька"))
-    .text("Экспорт кошелька", (ctx: Context) => ctx.reply("Экспорт кошелька")).row()
-    .text("Импорт кошелька", (ctx: Context) => ctx.reply("Импорт кошелька")).row()
-    .text("Пополнение кошелька", (ctx: Context) => ctx.reply("Пополнение кошелька"))
-    .text("Отправка средств", (ctx: Context) => ctx.reply("Отправка средств")).row()
-    .text("Просмотр баланса", (ctx: Context) => ctx.reply("Просмотр баланса")).row()
-    .text("Узнать адрес своего кошелька", (ctx: Context) => ctx.reply("Узнать адрес своего кошелька"))
-;
-bot.use(menu);
+let activeMenu: Menu;
 
-bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));
-bot.on("message", async (ctx) => {
-    return ctx.reply("Got another message!", {reply_markup: menu});
+const importWallet = (ctx: Context) => ctx.reply("Импорт кошелька", {reply_markup: activeMenu});
+const deposit = (ctx: Context) => ctx.reply("Пополнение кошелька", {reply_markup: activeMenu});
+const send = (ctx: Context) => ctx.reply("Отправка средств", {reply_markup: activeMenu});
+const getBalance = (ctx: Context) => ctx.reply("Просмотр баланса", {reply_markup: activeMenu});
+const getAddress = (ctx: Context) => ctx.reply("Узнать адрес своего кошелька", {reply_markup: activeMenu});
+
+activeMenu = new Menu("active-menu")
+    .text("Импорт кошелька", importWallet).row()
+    .text("Пополнение кошелька", deposit)
+    .text("Просмотр баланса", getBalance).row()
+    .text("Узнать адрес своего кошелька", getAddress).row()
+    .text("Отправка средств", send).row();
+bot.use(activeMenu);
+
+const createWallet = (ctx: Context) => ctx.reply("Кошелёк создан", {reply_markup: activeMenu});
+const exportWallet = (ctx: Context) => ctx.reply("Кошелёк экспортирован", {reply_markup: activeMenu});
+const newMenu = new Menu("new-menu")
+    .text("Создание кошелька", createWallet)
+    .text("Экспорт кошелька", exportWallet).row()
+;
+bot.use(newMenu);
+
+bot.command("start", (ctx) => {
+    return ctx.reply("Welcome! Up and running.", {reply_markup: newMenu});
 });
 bot.start();
 
