@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Vsevo1od/wallet-tg-bot#readme",
   "dependencies": {
+    "@grammyjs/menu": "^1.0.4",
     "dotenv": "^16.0.0",
     "grammy": "^1.7.0",
     "ts-node": "^10.7.0",

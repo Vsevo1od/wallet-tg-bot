@@ -1,7 +1,8 @@
 // Based on https://github.com/telegraf/telegraf/blob/v4/docs/examples/express-webhook-bot.ts
 
 import {config} from 'dotenv';
-import { Bot } from "grammy";
+import {Bot} from "grammy";
+import { Menu } from "@grammyjs/menu";
 
 config({path: '.env.local'});
 
@@ -12,18 +13,18 @@ if (BOT_TOKEN === undefined) {
 }
 
 const bot = new Bot(BOT_TOKEN);
+const menu = new Menu("full-menu")
+    .text("Создание кошелька").text("Экспорт кошелька").row()
+    .text("Импорт кошелька").row()
+    .text("Пополнение кошелька").text("Отправка средств").row()
+    .text("Просмотр баланса").row()
+    .text("Узнать адрес своего кошелька")
+;
+bot.use(menu);
+
 bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));
 bot.on("message", async (ctx) => {
-    await bot.api.setMyCommands([
-        { command: "create", description: "Создание кошелька" },
-        { command: "export", description: "Экспорт кошелька" },
-        { command: "import", description: "Импорт кошелька" },
-        { command: "deposit", description: "Пополнение кошелька" },
-        { command: "balance", description: "Просмотр баланса" },
-        { command: "send", description: "Отправка средств" },
-        { command: "address", description: "Узнать адрес своего кошелька" },
-    ]);
-    return ctx.reply("Got another message!");
+    return ctx.reply("Got another message!", {reply_markup: menu});
 });
 bot.start();
 
