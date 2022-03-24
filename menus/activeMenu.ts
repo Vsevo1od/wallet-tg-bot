@@ -10,7 +10,7 @@ const getBalance = (ctx: Context) => ctx.reply("Просмотр баланса"
 const getAddress = (ctx: Context) => ctx.reply("Узнать адрес своего кошелька", {reply_markup: activeMenu});
 
 activeMenu = new Menu("active-menu")
-    .text("Импорт кошелька", exportWallet).row()
+    .text("Экспорт кошелька", exportWallet).row()
     .text("Пополнение кошелька", deposit)
     .text("Просмотр баланса", getBalance).row()
     .text("Узнать адрес своего кошелька", getAddress).row()

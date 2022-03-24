@@ -16,7 +16,7 @@ if (BOT_TOKEN === undefined) {
 const bot = new Bot(BOT_TOKEN);
 bot.use(activeMenu);
 
-const importWallet = (ctx: Context) => ctx.reply("Кошелёк экспортирован", {reply_markup: activeMenu});
+const importWallet = (ctx: Context) => ctx.reply("Кошелёк импортирован", {reply_markup: activeMenu});
 const newMenu = new Menu("new-menu")
     .text("Создание кошелька", createWallet)
     .text("Импорт кошелька", importWallet).row()
