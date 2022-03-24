@@ -1,7 +1,7 @@
 // Based on https://github.com/telegraf/telegraf/blob/v4/docs/examples/express-webhook-bot.ts
 
 import {config} from 'dotenv';
-import {Bot, session} from "grammy";
+import {Bot, GrammyError, HttpError, session} from "grammy";
 import activeMenu from "./menus/activeMenu";
 import {MyContext, SessionData} from "./types/MyContext";
 import newMenu from './menus/newMenu';
@@ -29,3 +29,16 @@ bot.start();
 bot.api.setMyCommands([
     { command: "start", description: "Запуск бота" },
 ]);
+
+bot.catch((err) => {
+    const ctx = err.ctx;
+    console.error(`Error while handling update ${ctx.update.update_id}:`);
+    const e = err.error;
+    if (e instanceof GrammyError) {
+        console.error("Error in request:", e.description);
+    } else if (e instanceof HttpError) {
+        console.error("Could not contact Telegram:", e);
+    } else {
+        console.error("Unknown error:", e);
+    }
+});

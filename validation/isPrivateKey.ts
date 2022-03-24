@@ -1,6 +1,6 @@
 import {Wallet} from "ethers";
 
-export default function (str: string | undefined): str is string {
+function isPrivateKey(str: string | undefined): str is string {
     if (typeof str !== 'string'){
         return false;
     }
@@ -9,5 +9,13 @@ export default function (str: string | undefined): str is string {
         return true;
     } catch {
         return false;
+    }
+}
+
+export default isPrivateKey;
+
+export function assertIsPrivateKey(str: string | undefined): asserts str is string {
+    if (!isPrivateKey(str)){
+        throw new Error('Not a private key');
     }
 }
