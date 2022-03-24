@@ -10,7 +10,14 @@ const exportWallet = async (ctx: MyContext) => {
     await ctx.reply(ctx.session.privateKey);
     return ctx.reply("Экспорт кошелька", {reply_markup: activeMenu});
 };
-const deposit = (ctx: MyContext) => ctx.reply("Пополнение кошелька", {reply_markup: activeMenu});
+const deposit = (ctx: MyContext) => {
+    assertIsPrivateKey(ctx.session.privateKey);
+    const wallet = new Wallet(ctx.session.privateKey)
+    return ctx.reply(
+        `Для пополнения кошелька воспользуйтесь https://faucets.chain.link/kovan\n Ваш кошелёк <code>${wallet.address}</code>`,
+        {reply_markup: activeMenu, parse_mode: "HTML" }
+    );
+};
 const send = (ctx: MyContext) => ctx.reply("Отправка средств", {reply_markup: activeMenu});
 const getBalance = (ctx: MyContext) => ctx.reply("Просмотр баланса", {reply_markup: activeMenu});
 const getAddress = (ctx: MyContext) => ctx.reply("Узнать адрес своего кошелька", {reply_markup: activeMenu});
