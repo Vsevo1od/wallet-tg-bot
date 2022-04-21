@@ -5,6 +5,7 @@ import {assertIsPrivateKey} from "../validation/isPrivateKey";
 import provider from "../modules/provider";
 import {formatEther} from "ethers/lib/utils";
 import {MenuFlavor} from "@grammyjs/menu/out/menu";
+import {State} from "../types/State";
 
 let activeMenu: Menu<MyContext>;
 
@@ -36,8 +37,11 @@ const getAddress = async (ctx: MyContext & MenuFlavor) => {
     const wallet = new Wallet(ctx.session.privateKey);
     return ctx.reply(`Ваш адрес: ${wallet.address}`, {reply_markup: activeMenu});
 };
-
-const send = (ctx: MyContext) => ctx.reply("Отправка средств", {reply_markup: activeMenu});
+const send = async (ctx: MyContext & MenuFlavor) => {
+    ctx.menu.close();
+    ctx.session.state = State.SendToAddress;
+    return ctx.reply(`Укажите адрес, кому отправляем`);
+};
 
 activeMenu = new Menu<MyContext>("active-menu")
     .text("Экспорт кошелька", exportWallet).row()

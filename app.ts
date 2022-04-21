@@ -7,6 +7,7 @@ import {MyContext, SessionData} from "./types/MyContext";
 import newMenu from './menus/newMenu';
 import {State} from "./types/State";
 import onImportPrivateKey from "./subscribers/onImportPrivateKey";
+import {onSendToAddress, onSendAmount} from "./subscribers/onSendAction";
 
 config({path: '.env.local'});
 
@@ -23,7 +24,11 @@ bot.use(newMenu);
 bot.command("start", (ctx) => {
     return ctx.reply("Добро пожаловать! Импортируйте или создайте кошелёк", {reply_markup: newMenu});
 });
-bot.on('message:text', onImportPrivateKey);
+bot.on('message:text', (async ctx => {
+    await onSendAmount(ctx);
+    await onSendToAddress(ctx);
+    await onImportPrivateKey(ctx);
+}));
 
 bot.start();
 bot.api.setMyCommands([

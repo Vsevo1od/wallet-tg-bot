@@ -3,7 +3,7 @@ import {State} from "../types/State";
 import isPrivateKey from "../validation/isPrivateKey";
 import activeMenu from "../menus/activeMenu";
 
-export default (ctx: MyContext) => {
+export default async (ctx: MyContext) => {
     if (ctx.session.state !== State.Importing) {
         return;
     }

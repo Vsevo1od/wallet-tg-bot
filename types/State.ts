@@ -1,1 +1,6 @@
-export enum State {Default, Importing}
+export enum State {
+    Default,
+    Importing,
+    SendToAddress,
+    SendAmount,
+}
