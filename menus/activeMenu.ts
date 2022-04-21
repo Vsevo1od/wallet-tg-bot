@@ -26,9 +26,13 @@ const getBalance = async (ctx: MyContext) => {
     const balance = formatEther(await wallet.getBalance());
     return ctx.reply(`Ваш баланс: ${balance} eth`, {reply_markup: activeMenu});
 };
+const getAddress = async (ctx: MyContext) => {
+    assertIsPrivateKey(ctx.session.privateKey);
+    const wallet = new Wallet(ctx.session.privateKey);
+    return ctx.reply(`Ваш адрес: ${wallet.address}`, {reply_markup: activeMenu});
+};
 
 const send = (ctx: MyContext) => ctx.reply("Отправка средств", {reply_markup: activeMenu});
-const getAddress = (ctx: MyContext) => ctx.reply("Узнать адрес своего кошелька", {reply_markup: activeMenu});
 
 activeMenu = new Menu<MyContext>("active-menu")
     .text("Экспорт кошелька", exportWallet).row()
