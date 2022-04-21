@@ -2,6 +2,8 @@ import {Menu} from "@grammyjs/menu";
 import {MyContext} from "../types/MyContext";
 import {Wallet} from "ethers";
 import {assertIsPrivateKey} from "../validation/isPrivateKey";
+import provider from "../modules/provider";
+import {formatEther} from "ethers/lib/utils";
 
 let activeMenu: Menu<MyContext>;
 
@@ -18,8 +20,14 @@ const deposit = (ctx: MyContext) => {
         {reply_markup: activeMenu, parse_mode: "HTML" }
     );
 };
+const getBalance = async (ctx: MyContext) => {
+    assertIsPrivateKey(ctx.session.privateKey);
+    const wallet = new Wallet(ctx.session.privateKey, provider);
+    const balance = formatEther(await wallet.getBalance());
+    return ctx.reply(`Ваш баланс: ${balance} eth`, {reply_markup: activeMenu});
+};
+
 const send = (ctx: MyContext) => ctx.reply("Отправка средств", {reply_markup: activeMenu});
-const getBalance = (ctx: MyContext) => ctx.reply("Просмотр баланса", {reply_markup: activeMenu});
 const getAddress = (ctx: MyContext) => ctx.reply("Узнать адрес своего кошелька", {reply_markup: activeMenu});
 
 activeMenu = new Menu<MyContext>("active-menu")
